@@ -1,0 +1,50 @@
+em: 16 x 16 RGB LED Panel 10,000cd/m2
+Manufacturer: Unspecified
+Original Use: Outdoor direct sunlight visible 32k color digital signage
+Physical Dimensions: 8 1/4" x 8 1/4" x 1" / 220mm x 220m x 26mm (Approximately 
+Pixel Spacing: 12mm center-to-center
+Weight: 7.8oz / 220g
+
+Electrical Specs:
+ VLED Voltage: 5v @ ~ 6 Amp per panel, applied via spade lug to VLED terminals
+ VCC Voltage: 5v @ ~ .9 Amps, applied via spade lug to VCC terminals
+
+Communications:  
+ 2 12-Pin 0.1" standard input headers 8 data lines per header, 2 power 
+ 6 Serial Data Lines (RGB1 and RGB2)
+ 6 Output Enable Lines (RGB1 and RGB2) 
+ 2 Clock Lines (can be tied)
+ 2 Latch Enable Lines (can be tied)
+ Boards can be serially connected and daisy chained
+ Input Connectors * 2 (The output connector mirrors the input connector to pass the same signals to the next board)
+
+  V---Arrow
+ Pin   Function
+ 1 Serial Data In Red (1/2)
+ 2 Serial Data In Green (1/2)
+ 3 Serial Data In Blue (1/2)
+ 4 Ground
+ 5 Clock (Up to 25Mhz) (1/2)
+ 6 Ground
+ 7 Latch Enable (1/2)
+ 8 Output Enable Red (1/2)
+ 9 Output Enable Green (1/2)
+        10 Output Enable Blue (1/2)
+ 11 V+
+ 12 V+
+
+
+
+LED Driver: 
+ 48 * MBI5026CF 16-bit Constant Current LED Driver (Datasheet available online) 
+ (6 Rows of 8, RGB1 and RGB2)
+ Max refresh rate 25Mhz per channel (6 channels RBG1 and RGB2)
+  3 Potentiometers on back allow adjustment of Red, Green and Blue brightness levels for board color matching, etc.
+
+Notes on driving:
+These panels can be driven by common hobbyist micro-controllers or better and require at minimum 9 I/O lines. For 3 channel PWM brightness control you'll need 11. Because the panels pass data from one to the next adding more panels will still only require 9-11 I/O pins, however your refresh rate is reduced with more panels added due to needing to send more pixel data between each refresh.
+
+The panels are split into an upper half and lower half arrays which are 8 x 16 pixels in dimensions.
+In practice the clock, output enable and latch lines from the upper half and lower half of the panel can be tied together because the boards have a buffer chip (74LS245 Octal Bus Transceiver used as a simple 1 way driver) to drive all of the MBI5026GF LED driver chips.
+
+Brightness can be controlled globally using PWM on the Output Enable Lines.
