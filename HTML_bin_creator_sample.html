@@ -1,0 +1,220 @@
+ <!DOCTYPE html>
+<html>
+<head>
+<script>
+function byId(e){return document.getElementById(e);}
+function newEl(tag){return document.createElement(tag);}
+function newTxt(txt){return document.createTextNode(txt);}
+function toggleClass(element, newStr)
+{
+	index=element.className.indexOf(newStr);
+	if ( index == -1)
+		element.className += ' '+newStr;
+	else
+	{
+		if (index != 0)
+			newStr = ' '+newStr;
+		element.className = element.className.replace(newStr, '');
+	}
+}
+function forEachNode(nodeList, func)
+{
+	var i, n = nodeList.length;
+	for (i=0; i<n; i++)
+	{
+		func(nodeList[i], i, nodeList);
+	}
+}
+
+function hasClass(el, classStr)
+{
+	if ( (el.className.indexof(classStr) == 0) || (el.className.indexof(" "+classStr) != -1) )
+		return true;
+	return false;
+}
+
+function addClass(el, classStr)
+{
+	el.className += " " + classStr;
+}
+
+function removeClass(el, classStr)
+{
+	var index = el.className.indexOf(classStr);
+	if (index != -1)
+	{
+		if (index != 0)
+			classStr = " " + classStr;
+		el.className = el.className.replace(classStr, '');
+	}
+}
+
+window.addEventListener('load', mInit, false);
+var btnState = 0;
+
+function mInit()
+{
+	var tdList = document.querySelectorAll('td');
+	var i, n;
+	forEachNode(tdList, function(el){el.addEventListener('mousedown', function(){toggleClass(this, 'active');})});
+
+	n = tdList.length;
+	for (i=0; i<n; i++)
+		tdList[i].addEventListener('mouseover', onCellEnter);
+
+	window.addEventListener('mousedown', onMouseDown, false);
+	window.addEventListener('mouseup', onMouseUp, false);
+}
+
+function onCellEnter(evt)
+{
+	if (btnState == 1)
+		toggleClass(this, "active");
+	console.log(evt);
+}
+
+function onMouseDown(evt)
+{
+	btnState = 1;
+}
+function onMouseUp(evt)
+{
+	btnState = 0;
+}
+
+function computeOutput()
+{
+	var curByte=0, tbl, curRow, curCell, nRows, nCells;
+	var curStr = "PROGMEM prog_uint16_t gfx[16] = {";
+	
+	tbl = byId('char');
+	nRows = tbl.rows.length;
+	
+	for (curRow=nRows-1; curRow > 0 -1; curRow--)
+	{
+		curByte = 0;
+		nCells = tbl.rows[curRow].cells.length;
+		for (curCell = 0; curCell<nCells; curCell++)
+		{
+			curByte <<= 1;
+			if (tbl.rows[curRow].cells[curCell].className.indexOf('active') != -1)
+				curByte |= 1;
+		}
+		if (curRow != nRows-1)
+			curStr += ",";
+		curStr += curByte;
+	}
+	curStr += "};"
+	byId('result').value = curStr;
+}
+
+function computeOutput2()
+{
+	var curByte=0, tbl, curRow, curCell, nRows, nCells;
+	var curStr = "";
+	
+	tbl = byId('char');
+	nRows = tbl.rows.length;
+	for (curRow=0; curRow<nRows; curRow++)
+	{
+		curByte = 0;
+		nCells = tbl.rows[curRow].cells.length;
+		for (curCell = 0; curCell<nCells; curCell++)
+		{
+			curByte <<= 1;
+			if (tbl.rows[curRow].cells[curCell].className.indexOf('active') != -1)
+				curStr += "X";
+			else
+				curStr += ".";
+		}
+		curStr += "\n";
+	}
+	byId('result').value = curStr;
+}
+
+function clearCells()
+{
+	var cells = document.getElementsByTagName('td');
+	var i, n=cells.length;
+	for (i=0;i<n;i++)
+		cells[i].className = cells[i].className.replace(" active", "");
+}
+function fillCells()
+{
+	var cells = document.getElementsByTagName('td');
+	var i, n=cells.length;
+	for (i=0;i<n;i++)
+		cells[i].className = " active";
+}
+
+function toggleCells()
+{
+	var cells = document.getElementsByTagName('td');
+	var i, n=cells.length;
+	for (i=0;i<n;i++)
+		toggleClass(cells[i], 'active');
+}
+</script>
+<style>
+#lcdCharArea
+{
+	background: #3719ec;
+	display: inline-block;
+	padding: 1em;
+}
+
+#char td
+{
+	height: 2em;
+	width: 2em;
+	background: #1c0d79;
+}
+#char td.active
+{
+	background: #e3e1ee;
+}
+#ouputArea
+{
+	border: solid 1px black;
+	display: inline-block;
+}
+</style>
+</head>
+<body>
+<H1>This generator modified from one by enhzflep found at <a target="_blank" href="http://forum.arduino.cc/index.php?topic=164459.0">http://forum.arduino.cc/index.php?topic=164459.0</a></H1>
+<div id='lcdCharArea'>
+	<table id='char'>
+		<tbody>
+			<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+			<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>			
+		</tbody>
+	</table>
+	<hr>
+	<div style='display: inline-block'>
+		<input type='button' value='clear' onclick='clearCells();'/>
+		<input type='button' value='fill' onclick='fillCells();'/>
+		<input type='button' value='toggle' onclick='toggleCells();'/>
+	</div>
+</div>
+<div style='display:inline-block;'>
+	<input type='button' value='compute Hex code' onclick='computeOutput();'/>
+	<br>
+	<input type='button' value='compute text img' onclick='computeOutput2();'/>
+</div>
+<div id = 'ouputArea'><textarea id='result' rows='18' cols='80'></textarea></div>
+</body>
+</html>
